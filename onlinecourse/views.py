@@ -99,16 +99,18 @@ def enroll(request, course_id):
         Enrollment.objects.create(user=user, course=course, mode='honor')
         course.total_enrollment += 1
         course.save()
+    if not user.is_authenticated:
+        return render(request, 'onlinecourse/user_registration_bootstrap.html', {})
 
     return HttpResponseRedirect(reverse(viewname='onlinecourse:course_details', args=(course.id,)))
 
 
-def submit(request, course_id):
+def submit(request, course_id, lesson_id):
     enrollment=Enrollment.objects.get(user=request.user,course=course_id)
     submitted_answers=extract_answers(request)
     submission=Submission.objects.create(enrollment=enrollment)
     submission.choices.set(submitted_answers)
-    return HttpResponseRedirect(reverse(viewname='onlinecourse:show_exam_result', args=(course_id,submission.choices.first().question.lesson.pk,submission.pk)))
+    return HttpResponseRedirect(reverse(viewname='onlinecourse:show_exam_result', args=(course_id,lesson_id,submission.pk)))
 
 def extract_answers(request):
    submitted_answers = []

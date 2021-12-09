@@ -28,7 +28,7 @@
                         {% csrf_token %}
                         <div class="input-group">
                             <input type="text" class="form-control" placeholder="Username" name="username" >
-                            <input type="password" class="form-control" placeholder="Username" name="psw" >
+                            <input type="password" class="form-control" placeholder="Password" name="psw" >
                             <button class="btn btn-primary" type="submit">Login</button>
                             <a class="btn btn-link" href="{% url 'onlinecourse:registration' %}">Sign Up</a>
                         </div>
@@ -48,9 +48,14 @@
                         <div class="card-header"><h5>Lesson {{lesson.order|add:1}}: {{lesson.title}}</h5></div>
                         <div class="card-body">{{lesson.content}}</div>
                     </div>
-            <button type="button" data-toggle="collapse" data-target="#exam_{{lesson.pk}}" class="btn btn-primary">Start Exam</button>
+                {% if lesson.question_set.exists %}
+                    <button type="button" data-toggle="collapse" data-target="#exam_{{lesson.pk}}" class="btn btn-primary">Start Exam</button>
+                {% else %}
+                    No exam questions for this lesson created yet
+                {% endif %}
+            
             <div id="exam_{{lesson.pk}}" class="collapse">
-                <form id="questionform" action="{% url 'onlinecourse:submit' course.pk%}" method="post">
+                <form id="questionform" action="{% url 'onlinecourse:submit' course.pk lesson.pk %}" method="post">
                     {% csrf_token %}
 
                     {% for question in lesson.question_set.all %}
