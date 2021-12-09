@@ -36,34 +36,34 @@
 </nav>
 
 <div class="container-fluid">
-    {% if marks > 80 %}
+    {% if grade > 80 %}
     <div class="alert alert-success">
-        <h2><b>Congratulations, {{user.username}}!</b> You have passed the exam with score {{marks}}/{{max_marks}}</h2>
+        <h2><b>Congratulations, {{user.username}}!</b> You have passed the exam with score {{marks}}/{{max_marks}} (Grade:{{grade}})</h2>
     </div>
         {% else %}
         <div class="alert alert-danger">
-            <h2><b>Failed</b> Sorry, {{user.username}}! You have failed the exam with score {{marks}}/{{max_marks}}</h2>
+            <h2><b>Failed</b> Sorry, {{user.username}}! You have failed the exam with score {{marks}}/{{max_marks}} (Grade:{{grade}})</h2>
         </div>
         <a class="btn btn-link text-danger" href="{% url 'onlinecourse:course_details' course.id %}">Re-test</a>
         {% endif %}
         <div class="card-columns-vertical mt-1">
         <h5 class="">Exam results</h5>
             <div class="card mt-1">
-                {% for question in course.question_set.all%}
+                {% for question in lesson.question_set.all %}
                     <div class="card-header"><h5>{{question.question_text}}</h5></div>
                         <div class="card-body">
                             {% for choice in question.choice_set.all %}
-                                {% if choice in selected_choices %}
+                                {% if choice in selected_answers %}
                                     {% if choice.is_correct %}
-                                        <p class="alert alert-success"> Correct Answer: {{choice.choice_text}<p>
+                                        <p class="alert alert-success"> Correct Answer: {{choice.choice_text}}<p>
                                     {% else %}
-                                        <p class="alert alert-danger"> Wrong Answer: {{choice.choice_text<p>
+                                        <p class="alert alert-danger"> Wrong Answer: {{choice.choice_text}}<p>
                                     {% endif %}
                                 {% else %}
                                     {% if choice.is_correct %}
-                                        <p class="alert alert-warning">Not Selected: {{choice}}<p>
+                                        <p class="alert alert-warning">Not Selected: {{choice.choice_text}}<p>
                                     {% else %}
-                                        <p>{{choice}}<p>
+                                        <p>{{choice.choice_text}}<p>
                                     {% endif %}
                                 {% endif %}
                             {% endfor %}
